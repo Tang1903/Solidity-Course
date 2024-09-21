@@ -9,7 +9,7 @@ contract Variables{
 
     int32 public b  = type(int32).max;
 
-    // Local Variables 存在 函数内存 中，调用时才有； blockchain 存在链上，要消耗GAS； global 默认的全局变量，整个以太坊自带的变量
+    // Local 存在 函数内存 中，调用时才有； blockchain 存在链上，要消耗GAS； global 默认的全局变量，整个以太坊自带的变量
 
     string public text = 'hello,Walking';  // 存在 区块链上 的
 
@@ -21,7 +21,7 @@ contract Variables{
 
         uint time = block.timestamp;  // 当前区块的时间戳，全局变量，是根据 1970年 到 目前 的 秒数
 
-        address sender = msg.sender;  // mgs.sender 调用 这个函数的地址
+        address sender = msg.sender;  // mgs.sender 消息发送者（当前调用）
 
         return (time,sender);
 
