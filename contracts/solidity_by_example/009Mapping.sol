@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 
 contract MappingDemo{
 
-    // 声明 映射 的 格式为 mapping(KeyType => ValueType)，其中 KeyType 和 ValueType 分别是 Key 和 Value 的 变量类型。
+    // 创建（声明） 映射 的 格式为 mapping(KeyType => ValueType)，其中 KeyType 和 ValueType 分别是 Key 和 Value 的 变量类型。
 
     mapping(uint => address) public idToAddress;  // id 映射 到 地址
 
@@ -21,7 +21,7 @@ contract MappingDemo{
     }
 
     // TypeError: Only elementary types, user defined value types, contract types or enums are allowed as mapping keys.
-    mapping(Student => uint) public myMap;
+    // mapping(Student => uint) public myMap;
 
 
 
