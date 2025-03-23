@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.13;     // 声明 源文件 所使用的 Solidity 版本
+pragma solidity ^0.8.13;     // 声明 源文件 所使用 的 Solidity 版本
 
 //  定义了一个名为 Counter 的 智能合约
 contract Counter{
 
-    // 声明了一个 可以被公开访问的 uint类型的 状态变量count。 （uint ：unsigned integer 无符号整数类型）
+    // 声明了 一个 对外公开的 uint类型的 状态变量count。 （uint ：unsigned integer 无符号整数类型）
     uint public count;  
 
     // 定义了一个公开的 被标记为 view 的 函数 get，它返回一个无符号整数（uint），即当前count的值。 （view 关键字 表示 这个函数 不会修改 合约的状态（即不会改变任何 状态变量的值））
