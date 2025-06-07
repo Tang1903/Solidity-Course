@@ -16,13 +16,15 @@ contract dataLocationAndAssignRule {
     }
 
     // modifyMemoryArray函数中，tempArr 是 arr的一个副本，存储在memory中。对 tempArr 的 修改 不会影响arr。
-    function modifyMemoryArray() public view {
+    function modifyMemoryArray() public {
         // tempArr 是 显式声明为 存储在 内存中(memory) 的 局部变量。(是一个 在函数调用期间 存储在 内存中 的 局部变量)
         uint[] memory tempArr = arr;
 
         tempArr[0] = 200; // 修改memory数组，不会影响原数组
 
         // 调用 内部函数 修改 storage数组
+        // 需要移除view修饰符，因为这里调用了可能修改状态的函数
+        // 由于这里会修改状态变量，需要将函数的view修饰符移除
         modifyStorageArray(arr);
 
         // 此时，arr[0]的值 已经变为 100
