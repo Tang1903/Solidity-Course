@@ -6,7 +6,7 @@ pragma solidity ^0.8.13;
 contract Yeye {
     event Log(string msg);
 
-    // 定义3个 function：hip()  , pop() , man()  , log值 为 Yeye
+    // 定义3个 function：hip()  , pop() , man()  , log值 为 Yeye    
     function hip() public virtual {
         emit Log("Yeye");
     }
