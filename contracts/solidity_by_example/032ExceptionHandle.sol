@@ -5,7 +5,7 @@ contract errorException{
 
     address[] _owners;
 
-    // error TransferNotOwner();    // 定义 一个 没有携带参数 的 error 抛出异常方法
+    // error TransferNotOwner();    // require 抛出异常方法，定义 一个 没有携带参数 的 error 抛出异常方法
 
     // 1、定义一个 携带参数 的 异常，来提示 尝试转账 的 账户地址
     error TransferNotOwner(address sender); 
