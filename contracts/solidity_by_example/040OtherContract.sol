@@ -8,7 +8,7 @@ contract OtherContract {
     // Log事件 ，记录日志，收到 ETH 后 ，记录 amount 和 gas
     event Log(uint amount, uint gas);
 
-    // 返回 当前合约的地址 的 余额
+    // 返回 当前合约 的地址的余额
     function getBalance() public view returns (uint) {
         // address(this) 获取 当前合约的地址，.balance 是 该地址的 余额属性。
         return address(this).balance;
@@ -38,7 +38,6 @@ contract OtherContract {
 
 // CallContract合约 去调用 OtherContract合约 的 函数
 contract CallContract {
-    
     // 往 callSetX函数 传入 目标合约地址，生成 目标合约的引用，然后 调用 目标函数
     function callSetX(address _Address, uint256 x) external {
         OtherContract(_Address).setX(x);
