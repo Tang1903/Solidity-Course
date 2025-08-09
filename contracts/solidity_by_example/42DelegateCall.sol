@@ -39,7 +39,5 @@ contract B {
 // 分别用 call 和 delegatecall 来调用 合约C 的 setVars函数
 
 // Solidity中的另一个低级函数delegatecall。与call类似，
-
 // delegatecall 可以用来 调用 其他合约；不同点在于 运行的上下文，
-
 // B call C，上下文 为 C； 而 B delegatecall C，上下文 为 B。
