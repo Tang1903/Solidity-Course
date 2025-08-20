@@ -2,8 +2,7 @@
 pragma solidity ^0.8.13;
 
 contract AbiEncodeDecode {
-    
-    // 1、ABI编码
+    // 1、ABI解码
     // 将 编码 4个变量，他们的类型 分别是 uint256（别名 uint）, address, string, uint256[2]
     uint x = 10;
     address addr = 0x7A58c0Be72BE218B41C608b7Fe7C5bB630736C71;
@@ -63,7 +62,7 @@ contract AbiEncodeDecode {
     }
 }
 
-// 在以太坊中，数据 必须编码成 字节码 才能和 智能合约 交互。
+// 在以太坊中，数据 必须编码成 字节码 才能和 智能合约 交互！
 
 // Solidity中 ABI (Application Binary Interface，应用二进制接口 ) 是 与 以太坊智能合约 交互 的 标准。
 
