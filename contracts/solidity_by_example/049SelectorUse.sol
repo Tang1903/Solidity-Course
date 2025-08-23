@@ -1,141 +1,53 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-contract DemoContract {
-    // empty contract
-}
-
-contract SelectorUse {
-    // event 返回msg.data
-    event Log(bytes data);
-    event SelectorEvent(bytes4);
-
-    // Struct User
-    struct User {
-        uint256 uid;
-        bytes name;
-    }
-
-    // Enum School
-    enum School {
-        SCHOOL1,
-        SCHOOL2,
-        SCHOOL3
-    }
-
-    // 输入参数 to: 0x2c44b726ADF1963cA47Af88B284C06f30380fC78
-    function mint(address to) external {
-        emit Log(msg.data);
-    }
-
-    // 输出selector
-    // "mint(address)"： 0x6a627842
-    function mintSelector() external pure returns (bytes4 mSelector) {
-        return bytes4(keccak256("mint(address)"));
-    }
-
-    // 无参数selector
-    // 输入： 无
-    // nonParamSelector() ： 0x03817936
-    function nonParamSelector() external returns (bytes4 selectorWithNonParam) {
-        emit SelectorEvent(this.nonParamSelector.selector);
-        return bytes4(keccak256("nonParamSelector()"));
-    }
-
-    // elementary（基础）类型参数selector
-    // 输入：param1: 1，param2: 0
-    // elementaryParamSelector(uint256,bool) : 0x3ec37834
-    function elementaryParamSelector(
-        uint256 param1,
-        bool param2
-    ) external returns (bytes4 selectorWithElementaryParam) {
-        emit SelectorEvent(this.elementaryParamSelector.selector);
-
-        return bytes4(keccak256("elementaryParamSelector(uint256,bool)"));
-    }
-
-    // fixed size（固定长度）类型参数selector
-    // 输入： param1: [1,2,3]
-    // fixedSizeParamSelector(uint256[3]) : 0xead6b8bd
-    function fixedSizeParamSelector(
-        uint256[3] memory param1
-    ) external returns (bytes4 selectorWithFixedSizeParam) {
-        emit SelectorEvent(this.fixedSizeParamSelector.selector);
-
-        return bytes4(keccak256("fixedSizeParamSelector(uint256[3])"));
-    }
-
-    // non-fixed size（可变长度）类型参数selector
-    // 输入： param1: [1,2,3]， param2: "abc"
-    // nonFixedSizeParamSelector(uint256[],string) : 0xf0ca01de
-    function nonFixedSizeParamSelector(
-        uint256[] memory param1,
-        string memory param2
-    ) external returns (bytes4 selectorWithNonFixedSizeParam) {
-        emit SelectorEvent(this.nonFixedSizeParamSelector.selector);
-
-        return bytes4(keccak256("nonFixedSizeParamSelector(uint256[],string)"));
-    }
-
-    // mapping（映射）类型参数selector
-    // 输入：demo: 0x9D7f74d0C41E726EC95884E0e97Fa6129e3b5E99， user: [1, "0xa0b1"], count: [1,2,3], mySchool: 1
-    // mappingParamSelector(address,(uint256,bytes),uint256[],uint8) : 0xe355b0ce
-    function mappingParamSelector(
-        DemoContract demo,
-        User memory user,
-        uint256[] memory count,
-        School mySchool
-    ) external returns (bytes4 selectorWithMappingParam) {
-        emit SelectorEvent(this.mappingParamSelector.selector);
-
-        return
-            bytes4(
-                keccak256(
-                    "mappingParamSelector(address,(uint256,bytes),uint256[],uint8)"
-                )
-            );
-    }
-
-    // 使用selector来调用函数
-    function callWithSignature() external {
-        // 初始化uint256数组
-        uint256[] memory param1 = new uint256[](3);
-        param1[0] = 1;
-        param1[1] = 2;
-        param1[2] = 3;
-
-        // 初始化struct
-        User memory user;
-        user.uid = 1;
-        user.name = "0xa0b1";
-
-        // 利用abi.encodeWithSelector将函数的selector和参数打包编码
-        // 调用nonParamSelector函数
-        (bool success0, bytes memory data0) = address(this).call(
-            abi.encodeWithSelector(0x03817936)
-        );
-        // 调用elementaryParamSelector函数
-        (bool success1, bytes memory data1) = address(this).call(
-            abi.encodeWithSelector(0x3ec37834, 1, 0)
-        );
-        // 调用fixedSizeParamSelector函数
-        (bool success2, bytes memory data2) = address(this).call(
-            abi.encodeWithSelector(0xead6b8bd, [1, 2, 3])
-        );
-        // 调用nonFixedSizeParamSelector函数
-        (bool success3, bytes memory data3) = address(this).call(
-            abi.encodeWithSelector(0xf0ca01de, param1, "abc")
-        );
-        // 调用mappingParamSelector函数
-        (bool success4, bytes memory data4) = address(this).call(
-            abi.encodeWithSelector(
-                0xe355b0ce,
-                0x9D7f74d0C41E726EC95884E0e97Fa6129e3b5E99,
-                user,
-                param1,
-                1
-            )
-        );
-        require(success0 && success1 && success2 && success3 && success4);
+// 使用 selector 来调用 目标函数
+contract CallbackContract {
+    function callbackFunction(uint _data) external pure returns (uint) {
+        return _data * 2;
     }
 }
+
+contract CallerContract {
+    function callCallback(
+        address _callbackContract,
+        uint _data
+    ) external view returns (uint) {
+        bytes4 selector = bytes4(keccak256("callbackFunction(uint)")); // 计算函数选择器
+
+        // 调用回调函数
+        (bool success, bytes memory result) = _callbackContract.staticcall(
+            abi.encodePacked(selector, _data)
+        );
+
+        require(success, "Callback failed");
+
+        return abi.decode(result, (uint)); // 解析回调结果
+    }
+}
+
+// 在例子中，CallerContract 通过 函数选择器 找到 CallbackContract合约中 的 callbackFunction函数，并调 用它，这展示了 selector 在智能合约交互中 的 应用。
+
+// 什么是 selector
+
+// 当我们 调用 智能合约的函数 时，本质上是 向 目标合约 发送 一段 字节码 (即 calldata）, 所发送的 字节码 (即 calldata） 的 前4个字节 是 selector（函数选择器）。
+
+// 如： 0x6a6278420000000000000000000000002c44b726adf1963ca47af88b284c06f30380fc78  中 的 6a627842  就是 selector 函数选择器  （4个字节 是 8个字符）
+
+// selector 是由 函数签名 的 Keccak哈希后 的 前4个字节 构成 ，并用于 智能合约之间 的 交互。
+
+// 函数签名 则是 “函数名（逗号分隔的参数类型）”的组合。
+
+// selector的由来
+
+// selector的由来 可以追溯到 智能合约 的 函数调用机制。
+
+// 在 以太坊 等 区块链平台上，智能合约之间的交互 是通过 发送 包含 函数签名 和 参数 的 交易 来实现的。
+
+// 为了确定要调用的函数，区块链节点 会根据 交易数据中的前4个字节（即selector）与 合约中 定义的函数签名 进行 匹配。
+
+// selector的主要作用
+
+// selector的主要作用是 标识 和 定位 智能合约中的函数。
+
+// 通过 selector，区块链节点 可以快速 找到 并 调用 目标函数，而 无需 遍历 合约中的所有函数。
