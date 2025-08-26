@@ -38,7 +38,7 @@ contract TryCatch {
         }
     }
 
-    // 在 创建新合约中使用try-catch (合约 创建被视为 external call)
+    // 在 创建新合约中 使用 try-catch (合约 创建被视为 external call)
     // executeNew(0)会失败并释放`CatchEvent`, executeNew(1)会失败并释放`CatchByte`,executeNew(2)会成功并释放`SuccessEvent`
     function evecuteNew(uint a) external returns (bool success) {
         try new OnlyEvenContract(a) returns (OnlyEvenContract _even) {
@@ -52,6 +52,8 @@ contract TryCatch {
     }
 }
 
-// 在Solidity 中 使用 try-catch 来处理 智能合约运行中 的 异常：
-// - try-catch 只能用于 外部合约调用 和 合约创建。
+// 在 Solidity 中 使用 try-catch 来处理 智能合约运行中 的 异常：
+
+// - try-catch 只能 用于 外部合约函数调用 和 合约创建 。
+
 // - 如果 try 执行成功，返回 变量 必须 声明，并且 与 返回的变量类型 相同。
